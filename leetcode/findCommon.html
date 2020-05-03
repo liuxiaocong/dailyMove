@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<script type="text/javascript">
+  var commonChars = function(A) {
+    if(!A || A.length === 0){
+      return [];
+    }
+    const res = [];
+    const firChars = A[0];
+    for(let i = 0; i < firChars.length; i++){
+      const c = firChars[i];
+      console.log(c);
+      console.log(A);
+      for(let j = 1; j < A.length; j++){
+        const str = A[j];
+        console.log(str.indexOf(c));
+        if(str.indexOf(c) >= 0){
+          A[j] = str.replace(c,'');
+          console.log(j === A.length - 1);
+          if(j === A.length - 1){
+            console.log("push:" + c);
+            res.push(c);
+          }
+        }else{
+          break;
+        }
+      }
+    }
+    return res;
+  };
+  console.log(commonChars(["cool","lock","cook"]));
+</script>
+</body>
+</html>

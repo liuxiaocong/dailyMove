@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+  var convertToBase7 = function(num) {
+    if (num === 0) {
+      return '0';
+    }
+    let belowZero = false;
+    if (num < 0) {
+      belowZero = true;
+    }
+    let max = 1;
+    let left = Math.abs(num);
+    while (left >= max * 7) {
+      max = max * 7;
+    }
+    let ret = '';
+    while (left > 0) {
+      const current = Math.floor(left / max);
+      console.log(left);
+      console.log(current);
+      console.log(max);
+      console.log('>>>>>>>>>>');
+      left = left % max;
+      ret = ret + current;
+      max = max / 7;
+      if (max === 1) {
+        ret = ret + left;
+        left = 0;
+      }
+    }
+    while (max > 1) {
+      ret = ret + '0';
+      max = max / 7;
+    }
+    if (belowZero) {
+      ret = '-' + ret;
+    }
+    return ret;
+  };
+  console.log(convertToBase7(49));
+</script>
+</body>
+</html>

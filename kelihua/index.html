@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+  var curry = function(fn) {
+    var args = [].slice.call(arguments, 1);
+    console.log('args');
+    console.log(args);
+    return function() {
+      var newArgs = args.concat([].slice.call(arguments));
+      console.log('newArgs');
+      console.log([].slice.call(arguments));
+      console.log(newArgs);
+      return fn.apply(this, newArgs);
+    };
+  };
+
+  function add(a, b) {
+    return a + b;
+  }
+
+  var addCurry = curry(add, 1);
+  addCurry(2);
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+  <script type="text/javascript">
+    var checkStraightLine = function(coordinates) {
+      if(coordinates.length === 2){
+        return true;
+      }
+      let ant = (coordinates[1][1] - coordinates[0][1]) / (coordinates[1][0] - coordinates[0][0]);
+      console.log("ant:" + ant);
+      for(let i = 2; i < coordinates.length; i++){
+        const current =  (coordinates[i][1] - coordinates[i-1][1]) / (coordinates[i][0] - coordinates[i-1][0]);
+        console.log("current:" + current);
+        console.log(typeof current);
+        console.log("ant:" + ant);
+        console.log(typeof ant);
+        if(ant !== current){
+          return false;
+        }
+      }
+      return true;
+    };
+    checkStraightLine([[1,2],[2,3],[3,4],[4,5],[5,6],[6,7]])
+  </script>
+</body>
+</html>
