@@ -118,7 +118,27 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"index.js":[function(require,module,exports) {
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 function createElement(tag, attrs) {
   for (var _len = arguments.length, children = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
@@ -132,15 +152,103 @@ function createElement(tag, attrs) {
   };
 }
 
+var Component = /*#__PURE__*/function () {
+  function Component() {
+    var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, Component);
+
+    this.state = {};
+    this.props = props;
+  }
+
+  _createClass(Component, [{
+    key: "setState",
+    value: function setState(stateChange) {
+      // 将修改合并到state
+      Object.assign(this.state, stateChange);
+      renderComponent(this);
+    }
+  }]);
+
+  return Component;
+}();
+
+function createComponent(component, props) {
+  var inst; // 如果是类定义组件，则直接返回实例
+
+  if (component.prototype && component.prototype.render) {
+    inst = new component(props); // 如果是函数定义组件，则将其扩展为类定义组件
+  } else {
+    inst = new Component(props);
+    inst.constructor = component;
+
+    inst.render = function () {
+      return this.constructor(props);
+    };
+  }
+
+  return inst;
+}
+
+function setComponentProps(component, props) {
+  if (!component.base) {
+    if (component.componentWillMount) component.componentWillMount();
+  } else if (component.componentWillReceiveProps) {
+    component.componentWillReceiveProps(props);
+  }
+
+  component.props = props;
+  renderComponent(component);
+}
+
+function renderComponent(component) {
+  var base;
+  var renderer = component.render();
+
+  if (component.base && component.componentWillUpdate) {
+    component.componentWillUpdate();
+  }
+
+  base = _render(renderer);
+
+  if (component.base) {
+    if (component.componentDidUpdate) component.componentDidUpdate();
+  } else if (component.componentDidMount) {
+    component.componentDidMount();
+  }
+
+  if (component.base && component.base.parentNode) {
+    component.base.parentNode.replaceChild(base, component.base);
+  }
+
+  component.base = base;
+  base._component = component;
+}
+
 var React = {
-  createElement: createElement
+  createElement: createElement,
+  createComponent: createComponent,
+  Component: Component
 };
 
-function _render(vnode, container) {
-  // 当vnode为字符串时，渲染结果是一段文本
+function _render2(vnode, container) {
+  return container.appendChild(_render(vnode));
+}
+
+function _render(vnode) {
+  if (vnode === undefined || vnode === null || typeof vnode === 'boolean') vnode = '';
+  if (typeof vnode === 'number') vnode = String(vnode);
+
   if (typeof vnode === 'string') {
     var textNode = document.createTextNode(vnode);
-    return container.appendChild(textNode);
+    return textNode;
+  }
+
+  if (typeof vnode.tag === 'function') {
+    var component = createComponent(vnode.tag, vnode.attrs);
+    setComponentProps(component, vnode.attrs);
+    return component.base;
   }
 
   var dom = document.createElement(vnode.tag);
@@ -148,15 +256,15 @@ function _render(vnode, container) {
   if (vnode.attrs) {
     Object.keys(vnode.attrs).forEach(function (key) {
       var value = vnode.attrs[key];
-      setAttribute(dom, key, value); // 设置属性
+      setAttribute(dom, key, value);
     });
   }
 
   vnode.children.forEach(function (child) {
-    return _render(child, dom);
+    return _render2(child, dom);
   }); // 递归渲染子节点
 
-  return container.appendChild(dom); // 将渲染结果挂载到真正的DOM上
+  return dom;
 }
 
 function setAttribute(dom, name, value) {
@@ -187,15 +295,49 @@ function setAttribute(dom, name, value) {
       dom.removeAttribute(name);
     }
   }
-}
+} // end with react frame work
+
+
+var Welcome = /*#__PURE__*/function (_React$Component) {
+  _inherits(Welcome, _React$Component);
+
+  var _super = _createSuper(Welcome);
+
+  function Welcome() {
+    _classCallCheck(this, Welcome);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(Welcome, [{
+    key: "render",
+    value: function render() {
+      return React.createElement("h1", null, "Hello, ", this.props.name);
+    }
+  }]);
+
+  return Welcome;
+}(React.Component);
 
 var ReactDOM = {
   render: function render(vnode, container) {
     container.innerHTML = '';
-    return _render(vnode, container);
+    return _render2(vnode, container);
   }
 };
-ReactDOM.render(React.createElement("h1", null, "Hello, world!"), document.getElementById('root'));
+var element = React.createElement(Welcome, {
+  name: "Sara"
+});
+ReactDOM.render(element, document.getElementById('root'));
+
+function tick() {
+  var element = React.createElement("div", null, React.createElement(Welcome, {
+    name: "Sara"
+  }), React.createElement("h2", null, "It is ", new Date().toLocaleTimeString(), "."));
+  ReactDOM.render(element, document.getElementById('root'));
+}
+
+setInterval(tick, 1000);
 },{}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -224,7 +366,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61857" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51009" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
