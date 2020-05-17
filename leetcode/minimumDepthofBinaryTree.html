@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+  <script type="text/javascript">
+    var minDepth = function(root) {
+      const length = root.length;
+      let sum = 0;
+      let i = 1;
+      let count = 0;
+      while(sum < length){
+        sum = sum + i;
+        i=i*2;
+        if(sum<=length){
+          count+=1;
+        }
+        console.log(sum);
+        console.log(count);
+      }
+      return count-1;
+    };
+    const result = minDepth([3,9,20,null,null,15,7]);
+    console.log("result >>>>>>")
+    console.log(result);
+  </script>
+</body>
+</html>
