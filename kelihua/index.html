@@ -25,6 +25,18 @@
 
   var addCurry = curry(add, 1);
   addCurry(2);
+
+  function addArr(a, b) {
+    console.log(arguments);
+    console.log(arguments[0])
+    const arr = [].splice.call(arguments, 0);
+    console.log(arr);
+    return a + b;
+  }
+
+  addArr(3, 4);
+
+
 </script>
 </body>
 </html>

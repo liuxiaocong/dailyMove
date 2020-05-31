@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<pre>
+  In a town, there are N people labelled from 1 to N.  There is a rumor that one of these people is secretly the town judge.
+
+If the town judge exists, then:
+
+The town judge trusts nobody.
+Everybody (except for the town judge) trusts the town judge.
+There is exactly one person that satisfies properties 1 and 2.
+You are given trust, an array of pairs trust[i] = [a, b] representing that the person labelled a trusts the person labelled b.
+
+If the town judge exists and can be identified, return the label of the town judge.  Otherwise, return -1.
+</pre>
+<script type="text/javascript">
+  /**
+   * @param {number} N
+   * @param {number[][]} trust
+   * @return {number}
+   */
+  var findJudge = function(N, trust) {
+    if(!trust){
+      return -1;
+    }
+    for(let i = 1; i <= N; i++){
+      let trustCount = 0;
+      let judgeTrustOther = false;
+      for(let j = 0; j< trust.length; j++){
+        if(trust[j][0] === i){
+          judgeTrustOther = true;
+          break;
+        }else if(trust[j][1] === i){
+          trustCount++;
+        }
+      }
+      if(trustCount === N-1 && !judgeTrustOther){
+        return i;
+      }
+    }
+    return -1;
+  };
+</script>
+</body>
+</html>

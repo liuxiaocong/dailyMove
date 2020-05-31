@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+  const valueMap = {
+    a: 1,
+    e: 2,
+    i: 3,
+    o: 4,
+    u: 5,
+  };
+
+  function longestVowelSubsequence(s) {
+    // Write your code here
+    return getMaxLength(s, 'a', 0);
+  }
+
+  function getMaxLength(s, startChar, currentCount) {
+    if (!s || s.length === 0) {
+      return currentCount;
+    }
+    Object.keys(valueMap).forEach((key) => {
+      console.log(valueMap[key]);
+      console.log(valueMap[startChar]);
+      console.log(s.indexOf(key) < 0);
+      if (valueMap[key] > valueMap[startChar] && s.indexOf(key) < 0) {
+        return currentCount;
+      }
+    });
+
+    const first = s[0];
+    if (s.length === 1) {
+      if (first === startChar || valueMap[startChar] < valueMap[first]) {
+        return currentCount + 1;
+      } else {
+        return currentCount;
+      }
+    }
+    if (first === startChar) {
+      return getMaxLength(s.slice(1, s.length), startChar, currentCount + 1);
+    } else if (valueMap[startChar] < valueMap[first]) {
+      return Math.max(
+        getMaxLength(s.slice(1, s.length), first, currentCount + 1),
+        getMaxLength(s.slice(1, s.length), startChar, currentCount));
+    } else {
+      return getMaxLength(s.slice(1, s.length), startChar, currentCount);
+    }
+  }
+
+  const result = getMaxLength('aess', 'a', 0);
+  console.log(result);
+</script>
+</body>
+</html>

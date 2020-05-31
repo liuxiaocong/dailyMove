@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+  var target = {};
+  var handler = {
+    get: function (target, propKey, receiver) {
+      console.log(`getting ${propKey}!`);
+      return Reflect.get(target, propKey, receiver);
+    },
+    set: function (target, propKey, value, receiver) {
+      console.log(`setting ${propKey}!`);
+      return Reflect.set(target, propKey, value, receiver);
+    }
+  };
+  var proxy = new Proxy(target, handler);
+  proxy.a = 'b';
+  target.a = 'c';
+  console.log(target.a) // "b"
+  console.log(proxy.a)
+</script>
+</body>
+</html>

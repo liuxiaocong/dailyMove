@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+  <div class="wrap">
+    <span>count</span>
+    <span id="count">1</span>
+  </div>
+  <script type="text/javascript">
+    let inx = 1;
+    setInterval(()=>{
+      document.getElementById('count').innerText = inx++;
+    },1000)
+  </script>
+</body>
+</html>

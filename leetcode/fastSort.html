@@ -5,24 +5,74 @@
   <title>Title</title>
 </head>
 <body>
-  <script type="text/javascript">
-    function fastSort(arr) {
-      let pointer = 0;
-      let left = 0;
-      let right = arr.length - 1;
+<script type="text/javascript">
+  function f(arr) {
+    fastSort(arr, 0, arr.length - 1);
+  }
 
-      while(left < right){
-        if(arr[right] > pointer){
-          right--;
-        }else {
-
-        }
-      }
-
+  function fastSort(arr, start, end) {
+    let left = start;
+    let right = end;
+    if (left >= right) {
+      return;
     }
+    let current = arr[left];
+    let point = arr[left];
+    console.log('point:' + point);
+    while (left < right) {
+      while (arr[right] > point) {
+        right--;
+      }
+      console.log('right:' + right);
+      if (right > left) {
+        arr[left] = arr[right];
+        left++;
+      }
+      while (arr[left] < point) {
+        left++;
+      }
+      console.log('left:' + left);
+      if (right > left) {
+        arr[right] = arr[left];
+        right--;
+      }
+    }
+    arr[right] = current;
+    fastSort(arr, start, right - 1);
+    fastSort(arr, right + 1, end);
+  }
 
+  function sort(arr, left, right) {
+    if (left >= right) {
+      return;
+    }
+    let key = arr[left];
+    let start = left;
+    let end = right;
+    while (start !== end) {
+      while (end > start && arr[end] >= key) {
+        end--;
+      }
+      while (end > start && arr[start] <= key) {
+        start++;
+      }
+      if (start !== end) {
+        let temp = arr[start];
+        arr[start] = arr[end];
+        arr[end] = temp;
+      }
+    }
+    arr[left] = arr[start];
+    arr[start] = key;
+    sort(arr, left, start - 1);
+    sort(arr, start + 1, right);
+  }
 
-  </script>
+  const arr = [7, 9, 8, 1, 2, 4, 5, 2, 3, 5, 5];
+  f(arr);
+
+  console.log(arr);
+</script>
 
 </body>
 </html>

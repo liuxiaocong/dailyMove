@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div id="id_test_video" style="width:100%; height:auto;"></div>
+<script src="//imgcache.qq.com/open/qcloud/video/vcplayer/TcPlayer-2.3.2.js" charset="utf-8"></script>
+<script type="text/javascript">
+  var player = new TcPlayer('id_test_video', {
+    'm3u8': 'https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1590262844/ei/3CfJXuPYM4WKvgTSj6XABw/ip/42.60.78.64/id/yk2CUjbyyQY.9/source/yt_live_broadcast/requiressl/yes/tx/23791272/txs/23791272%2C23791946/hfr/1/playlist_duration/30/manifest_duration/30/maudio/1/vprv/1/go/1/keepalive/yes/dover/11/itag/0/playlist_type/DVR/sparams/expire%2Cei%2Cip%2Cid%2Csource%2Crequiressl%2Ctx%2Ctxs%2Chfr%2Cplaylist_duration%2Cmanifest_duration%2Cmaudio%2Cvprv%2Cgo%2Citag%2Cplaylist_type/sig/AOq0QJ8wRQIhAIVU6YQqTuy1OMLMJEgHt0jq5vvEEhcahPyBrJRX-dZ6AiAM3vRzKR_SaEqZKNrXS8CzVzZ2N7tR1DcWyL8GZMLeMA%3D%3D/file/index.m3u8', //请替换成实际可用的播放地址
+    'autoplay': true,      //iOS 下 safari 浏览器，以及大部分移动端浏览器是不开放视频自动播放这个能力的
+    'width': '480',//视频的显示宽度，请尽量使用视频分辨率宽度
+    'height': '320',//视频的显示高度，请尽量使用视频分辨率高度
+  });
+</script>
+</body>
+</html>

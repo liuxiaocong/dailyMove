@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+  function sub_curry(fn) {
+    var args = [].slice.call(arguments, 1);
+    return function() {
+      return fn.apply(this, args.concat([].slice.call(arguments)));
+    };
+  }
+
+  function curry(fn, length) {
+    length = length || fn.length;
+    var slice = Array.prototype.slice;
+
+    return function() {
+      if (arguments.length < length) {
+        var combined = [fn].concat(slice.call(arguments));
+        return curry(sub_curry.apply(this, combined), length - arguments.length);
+      } else {
+        return fn.apply(this, arguments);
+      }
+    };
+  }
+
+  var fn = curry(function(a, b, c) {
+    return [a, b, c];
+  });
+  console.log(fn("a", "b", "c")) // ["a", "b", "c"]
+  console.log(fn("a", "b")("c")) // ["a", "b", "c"]
+  console.log(fn("a")("b")("c")) // ["a", "b", "c"]
+  console.log(fn("a")) // ["a", "b", "c"]
+
+  var obj = {
+    toString: function() {
+      console.log('调用了 obj.toString');
+      return {};
+    },
+    valueOf: function() {
+      console.log('调用了 obj.valueOf')
+      return '110';
+    }
+  }
+  // 调用了 obj.toString
+  // 调用了 obj.valueOf
+  // 110
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<pre>
+    Give a string s, count the number of non-empty (contiguous) substrings that have the same number of 0's and 1's, and all the 0's and all the 1's in these substrings are grouped consecutively.
+
+Substrings that occur multiple times are counted the number of times they occur.
+
+Example 1:
+Input: "00110011"
+Output: 6
+Explanation: There are 6 substrings that have equal number of consecutive 1's and 0's: "0011", "01", "1100", "10", "0011", and "01".
+
+Notice that some of these substrings repeat and are counted the number of times they occur.
+
+Also, "00110011" is not a valid substring because all the 0's (and 1's) are not grouped together.
+Example 2:
+Input: "10101"
+Output: 4
+Explanation: There are 4 substrings: "10", "01", "10", "01" that have equal number of consecutive 1's and 0's.
+  </pre>
+<script type="text/javascript">
+  var countBinarySubstrings = function(s) {
+    if (!s) {
+      return 0;
+    }
+    let res = 0;
+    for (let i = 0; i < s.length; i++) {
+      for (let j = i + 1; j < s.length + 1; j++) {
+        const str = s.substring(i, j);
+        if (isTarget(str)) {
+          console.log(str);
+          res++;
+        }
+      }
+    }
+    return res;
+  };
+
+  const isTarget = (str)=>{
+    let one = 0;
+    let zero = 0;
+    let lastOneIsOne = str[0] === '1';
+    let hasChange = false;
+    if(lastOneIsOne){
+      one++;
+    }else{
+      zero++;
+    }
+    for(let i = 1; i < str.length; i++){
+      const s = str[i];
+      if(!hasChange){
+        if(lastOneIsOne && s === '1'){
+          one++;
+        }else if(!lastOneIsOne && s === '0'){
+          zero++;
+        }else{
+          hasChange = true;
+          lastOneIsOne = !lastOneIsOne;
+          if(s === '1'){
+            one++;
+          }else{
+            zero++;
+          }
+        }
+      }else {
+        if(lastOneIsOne && s === '1'){
+          one++;
+        }else if(!lastOneIsOne && s === '0'){
+          zero++;
+        }else{
+          return false;
+        }
+      }
+    }
+    return one === zero;
+  }
+  //console.log(isTarget('01'));
+  countBinarySubstrings("00110");
+</script>
+</body>
+</html>

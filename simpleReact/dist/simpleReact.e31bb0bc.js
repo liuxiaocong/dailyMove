@@ -117,22 +117,27 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"index.js":[function(require,module,exports) {
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+})({"react.js":[function(require,module,exports) {
+"use strict";
 
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -210,29 +215,228 @@ function renderComponent(component) {
     component.componentWillUpdate();
   }
 
-  base = _render(renderer);
+  console.log('component.base');
+  console.log(component.base);
+  console.log('renderer');
+  console.log(JSON.stringify(renderer)); //base = _render(renderer);
+
+  base = diff(component.base, renderer);
 
   if (component.base) {
     if (component.componentDidUpdate) component.componentDidUpdate();
   } else if (component.componentDidMount) {
     component.componentDidMount();
-  }
+  } //if (component.base && component.base.parentNode) {
+  //  component.base.parentNode.replaceChild(base, component.base);
+  //}
 
-  if (component.base && component.base.parentNode) {
-    component.base.parentNode.replaceChild(base, component.base);
-  }
 
   component.base = base;
   base._component = component;
 }
 
+function diff(dom, vnode, container) {
+  var ret = diffNode(dom, vnode);
+
+  if (container && ret.parentNode !== container) {
+    container.appendChild(ret);
+  }
+
+  return ret;
+}
+
+function diffNode(dom, vnode) {
+  console.log('diffnode');
+  console.log(dom);
+  console.log(vnode);
+  var out = dom;
+  if (vnode === undefined || vnode === null || typeof vnode === 'boolean') vnode = '';
+  if (typeof vnode === 'number') vnode = String(vnode); // diff text node
+
+  if (typeof vnode === 'string') {
+    console.log('1111'); // 如果当前的DOM就是文本节点，则直接更新内容
+
+    if (dom && dom.nodeType === 3) {
+      // nodeType: https://developer.mozilla.org/zh-CN/docs/Web/API/Node/nodeType
+      if (dom.textContent !== vnode) {
+        dom.textContent = vnode;
+      } // 如果DOM不是文本节点，则新建一个文本节点DOM，并移除掉原来的
+
+    } else {
+      out = document.createTextNode(vnode);
+
+      if (dom && dom.parentNode) {
+        dom.parentNode.replaceChild(out, dom);
+      }
+    }
+
+    return out;
+  }
+
+  if (typeof vnode.tag === 'function') {
+    console.log('2222');
+    return diffComponent(dom, vnode);
+  } //
+
+
+  if (!dom || !isSameNodeType(dom, vnode)) {
+    console.log('3333');
+    out = document.createElement(vnode.tag);
+
+    if (dom) {
+      _toConsumableArray(dom.childNodes).map(out.appendChild); // 将原来的子节点移到新节点下
+
+
+      if (dom.parentNode) {
+        dom.parentNode.replaceChild(out, dom); // 移除掉原来的DOM对象
+      }
+    }
+  }
+
+  if (vnode.children && vnode.children.length > 0 || out.childNodes && out.childNodes.length > 0) {
+    console.log('4444');
+    diffChildren(out, vnode.children);
+  }
+
+  diffAttributes(out, vnode);
+  return out;
+}
+
+function isSameNodeType(dom, vnode) {
+  if (typeof vnode === 'string' || typeof vnode === 'number') {
+    return dom.nodeType === 3;
+  }
+
+  if (typeof vnode.tag === 'string') {
+    return dom.nodeName.toLowerCase() === vnode.tag.toLowerCase();
+  }
+
+  return dom && dom._component && dom._component.constructor === vnode.tag;
+}
+
+function diffAttributes(dom, vnode) {
+  var old = {}; // 当前DOM的属性
+
+  var attrs = vnode.attrs; // 虚拟DOM的属性
+
+  for (var i = 0; i < dom.attributes.length; i++) {
+    var attr = dom.attributes[i];
+    old[attr.name] = attr.value;
+  } // 如果原来的属性不在新的属性当中，则将其移除掉（属性值设为undefined）
+
+
+  for (var name in old) {
+    if (!(name in attrs)) {
+      setAttribute(dom, name, undefined);
+    }
+  } // 更新新的属性值
+
+
+  for (var _name in attrs) {
+    if (old[_name] !== attrs[_name]) {
+      setAttribute(dom, _name, attrs[_name]);
+    }
+  }
+}
+
+function diffChildren(dom, vchildren) {
+  var domChildren = dom.childNodes;
+  var children = [];
+  var keyed = {};
+
+  if (domChildren.length > 0) {
+    for (var i = 0; i < domChildren.length; i++) {
+      var child = domChildren[i];
+      var key = child.key;
+
+      if (key) {
+        keyedLen++;
+        keyed[key] = child;
+      } else {
+        children.push(child);
+      }
+    }
+  }
+
+  if (vchildren && vchildren.length > 0) {
+    var min = 0;
+    var childrenLen = children.length;
+
+    for (var _i = 0; _i < vchildren.length; _i++) {
+      var vchild = vchildren[_i];
+      var _key2 = vchild.key;
+
+      var _child = void 0;
+
+      if (_key2) {
+        if (keyed[_key2]) {
+          _child = keyed[_key2];
+          keyed[_key2] = undefined;
+        }
+      } else if (min < childrenLen) {
+        for (var j = min; j < childrenLen; j++) {
+          var c = children[j];
+
+          if (c && isSameNodeType(c, vchild)) {
+            _child = c;
+            children[j] = undefined;
+            if (j === childrenLen - 1) childrenLen--;
+            if (j === min) min++;
+            break;
+          }
+        }
+      }
+
+      _child = diffNode(_child, vchild);
+      var f = domChildren[_i];
+
+      if (_child && _child !== dom && _child !== f) {
+        if (!f) {
+          dom.appendChild(_child);
+        } else if (_child === f.nextSibling) {
+          removeNode(f);
+        } else {
+          dom.insertBefore(_child, f);
+        }
+      }
+    }
+  }
+}
+
+function diffComponent(dom, vnode) {
+  var c = dom && dom._component;
+  var oldDom = dom; // 如果组件类型没有变化，则重新set props
+
+  if (c && c.constructor === vnode.tag) {
+    setComponentProps(c, vnode.attrs);
+    dom = c.base; // 如果组件类型变化，则移除掉原来组件，并渲染新的组件
+  } else {
+    if (c) {
+      unmountComponent(c);
+      oldDom = null;
+    }
+
+    c = createComponent(vnode.tag, vnode.attrs);
+    setComponentProps(c, vnode.attrs);
+    dom = c.base;
+
+    if (oldDom && dom !== oldDom) {
+      oldDom._component = null;
+      removeNode(oldDom);
+    }
+  }
+
+  return dom;
+}
+
 var React = {
   createElement: createElement,
   createComponent: createComponent,
-  Component: Component
+  Component: Component,
+  render: render
 };
 
-function _render2(vnode, container) {
+function render(vnode, container) {
   return container.appendChild(_render(vnode));
 }
 
@@ -261,7 +465,7 @@ function _render(vnode) {
   }
 
   vnode.children.forEach(function (child) {
-    return _render2(child, dom);
+    return render(child, dom);
   }); // 递归渲染子节点
 
   return dom;
@@ -278,9 +482,9 @@ function setAttribute(dom, name, value) {
     if (!value || typeof value === 'string') {
       dom.style.cssText = value || '';
     } else if (value && _typeof(value) === 'object') {
-      for (var _name in value) {
+      for (var _name2 in value) {
         // 可以通过style={ width: 20 }这种形式来设置样式，可以省略掉单位px
-        dom.style[_name] = typeof value[_name] === 'number' ? value[_name] + 'px' : value[_name];
+        dom.style[_name2] = typeof value[_name2] === 'number' ? value[_name2] + 'px' : value[_name2];
       }
     } // 普通属性则直接更新属性
 
@@ -295,50 +499,94 @@ function setAttribute(dom, name, value) {
       dom.removeAttribute(name);
     }
   }
-} // end with react frame work
+}
 
+var _default = React;
+exports.default = _default;
+},{}],"index.js":[function(require,module,exports) {
+"use strict";
 
-var Welcome = /*#__PURE__*/function (_React$Component) {
-  _inherits(Welcome, _React$Component);
+var _react = _interopRequireDefault(require("./react"));
 
-  var _super = _createSuper(Welcome);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-  function Welcome() {
-    _classCallCheck(this, Welcome);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-    return _super.apply(this, arguments);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+// end with react frame work
+var Count = /*#__PURE__*/function (_React$Component) {
+  _inherits(Count, _React$Component);
+
+  var _super = _createSuper(Count);
+
+  function Count() {
+    var _this;
+
+    _classCallCheck(this, Count);
+
+    _this = _super.call(this);
+    _this.state = {
+      count: 0
+    };
+    setInterval(function () {
+      _this.setState({
+        count: _this.state.count + 1
+      });
+    }, 1000);
+    return _this;
   }
 
-  _createClass(Welcome, [{
+  _createClass(Count, [{
     key: "render",
     value: function render() {
-      return React.createElement("h1", null, "Hello, ", this.props.name);
+      var _this2 = this;
+
+      return _react.default.createElement("div", null, "Text", _react.default.createElement("div", null, "Count: ", this.state.count), _react.default.createElement("button", {
+        onClick: function onClick() {
+          _this2.setState({
+            count: _this2.state.count + 1
+          });
+        }
+      }, "Add"));
     }
   }]);
 
-  return Welcome;
-}(React.Component);
+  return Count;
+}(_react.default.Component);
 
 var ReactDOM = {
   render: function render(vnode, container) {
     container.innerHTML = '';
-    return _render2(vnode, container);
+    return _react.default.render(vnode, container);
   }
 };
-var element = React.createElement(Welcome, {
-  name: "Sara"
+
+var element = _react.default.createElement(Count, {
+  name: "counter"
 });
-ReactDOM.render(element, document.getElementById('root'));
 
-function tick() {
-  var element = React.createElement("div", null, React.createElement(Welcome, {
-    name: "Sara"
-  }), React.createElement("h2", null, "It is ", new Date().toLocaleTimeString(), "."));
-  ReactDOM.render(element, document.getElementById('root'));
-}
-
-setInterval(tick, 1000);
-},{}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+console.log(element);
+ReactDOM.render(element, document.getElementById('root')); //setInterval( tick, 1000 );
+},{"./react":"react.js"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -366,7 +614,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51009" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61314" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
