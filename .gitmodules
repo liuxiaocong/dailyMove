@@ -1,0 +1,3 @@
+[submodule "submodule-h5-game"]
+	path = submodule-h5-game
+	url = git@github.com:liuxiaocong/h5-games.git
