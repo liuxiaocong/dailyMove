@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<input id="txtInputTagId" />
+<input id="inp" type="text"/>
+<button id="btn">
+  log
+</button>
+<script type="text/javascript">
+  const defaultVal = 'i am..';
+
+  const inpEle = document.getElementById('inp');
+
+  const app = {};
+  app.input = {};
+
+  function user(name) {
+    this.name = name;
+  }
+  user.prototype.age = { value: 13 };
+  const u = new user('AAA');
+  //如果是对象修改u的age会修改user.prototype.age，如果是值，就不会
+
+  //Object.defineProperties(u,{
+  //  age:{
+  //    get() {
+  //      console.log('get')
+  //    },
+  //    set(v) {
+  //      console.log('set');
+  //    }
+  //  }
+  //})
+  //u.age = 13;
+
+
+  function defKey(dom, key, target, defaultVal) {
+    dom['_' + key] = defaultVal;
+    dom[key] = defaultVal;
+    Object.defineProperties(dom, {
+      value: {
+        get() {
+          return this['_' + key];
+        },
+
+        set(v) {
+          console.log(target);
+          target['_' + key] = v;
+          this['_' + key] = v;
+        },
+      },
+    });
+  }
+
+  //defKey(inpEle, 'value', app.input, app.input, defaultVal);
+
+  Object.defineProperty(inpEle, 'value', {
+    get() {
+      console.log('get');
+      return inpEle['_value'];
+    },
+
+    set(v) {
+      console.log('set');
+      app.input['_value'] = v;
+      inpEle['_value'] = v;
+    },
+  });
+
+  inpEle.onkeydown = (e)=>{
+    console.log(e.target.value);
+  }
+
+  document.getElementById('btn').onclick = () => {
+    console.log(inpEle.value);
+    console.log(app.input);
+  };
+  inpEle.value = defaultVal;
+
+
+  var txt = document.getElementById('txtInputTagId');
+
+  // define value property for your input instance
+  Object.defineProperty(txt, 'value', {
+    set: function(newValue) {
+      var valueProp = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+      valueProp.set.call(txt, newValue);
+
+      // Do some logic here
+      console.log('setted');
+    }
+  });
+
+  const target = {
+    _value: 12,
+    value: 12,
+  }
+
+  Object.defineProperties(target, {
+    value:{
+      get() {
+        console.log("get")
+        console.log(arguments);
+        return this._value;
+      },
+      set(v) {
+        this._value = v;
+      }
+    }
+  })
+  console.log(target.value);
+  target.value = 24;
+  console.log(target.value)
+</script>
+</body>
+</html>

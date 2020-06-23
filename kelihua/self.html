@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+  function f() {
+    console.log(arguments);
+  }
+
+  f(1,2);
+
+  function createAdd(){
+    let currentArg = [].slice.call(arguments);
+    function fun(){
+      currentArg = currentArg.concat([].slice.call(arguments));
+      return fun;
+    }
+    fun.toString = ()=>{
+      return currentArg.reduce((x,y) => x+y)
+    }
+    console.log(fun.prototype)
+    return fun;
+  }
+
+  const add = createAdd();
+  const result = add(1,2,3,4,5);
+  console.log(result + '')
+
+  const result3 = add(1)(2)(2,3,4,5);
+  console.log(result3 + '')
+
+  //function addStr() {
+  //  let args = [...arguments]
+  //  let fn = function  () {
+  //    args.push(...arguments)
+  //    return fn
+  //  }
+  //  fn.toString = function () {
+  //    return args.reduce((x,y) => x+y)
+  //  }
+  //  return fn
+  //}
+  //const result2 = addStr(1,2,3,4,5);
+  //console.log(result2 + '');
+  const arr = ()=>{
+    console.log(this);
+    this.a = 123;
+  }
+
+  function arr2() {
+    console.log(this);
+    this.a = 123;
+  }
+
+  const r = arr();
+  const r2 = new arr2();
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+
+  console.log(">>>>>>>");
+  setTimeout(()=>{
+    console.log('first timeout');
+    setTimeout(()=>{
+      console.log('second timeout')
+    },0)
+  },0)
+
+  new Promise((resolve, reject)=>{
+    resolve('first Promise')
+  }).then((value)=>{
+    console.log(value);
+    console.log('first promise then');
+    new Promise((resolve, reject)=>{
+      resolve('second Promise');
+    }).then((value)=>{
+      console.log(value);
+      console.log('second promise then');
+    })
+  })
+  console.log("<<<<<<<<");
+</script>
+
+</body>
+</html>

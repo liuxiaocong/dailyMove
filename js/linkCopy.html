@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+https://www.jianshu.com/p/299bc557ebbd
+<script type="text/javascript">
+
+  let a = new RandomListNode('a');
+  let b = new RandomListNode('b');
+  let c = new RandomListNode('c');
+  let d = new RandomListNode('d');
+  let e = new RandomListNode('e');
+  a.next = b;
+  a.next.next = c;
+  a.next.next.next = d;
+  a.next.next.next.next = e;
+  a.random = c;
+  b.random = a;
+  c.random = b;
+  d.random = e;
+  e.random = a;
+
+
+  function RandomListNode(x){
+    this.label = x;
+    this.next = null;
+    this.random = null;
+  }
+
+  function Clone(pHead)
+  {
+    // write code here
+    if (!pHead) {
+      return null;
+    }
+    // 复制头结点
+    var node = new RandomListNode(pHead.label);
+    node.random = pHead.random;
+    // 递归其他节点
+    node.next = Clone(pHead.next);
+    return node;
+  }
+
+  //correct one
+  function Clone(pHead) {
+    if (pHead === null) return;
+
+    // 对应思路二中的第一步：
+    var currNode = pHead;
+    while (currNode !== null) {
+      var node = new RandomListNode(currNode.label);
+      node.next = currNode.next;
+      currNode.next = node;
+      currNode = node.next;
+    }
+
+    // 对应思路二中的第二步：
+    currNode = pHead;
+    while (currNode !== null && currNode.next !== null) {
+      if (currNode.random) {
+        currNode.next.random = currNode.random.next;
+      }
+      currNode = currNode.next.next;
+    }
+
+    //拆分，对应思路二中的第三步：
+    var pCloneHead = pHead.next;
+    var temp = null;
+    currNode = pHead;
+    while (currNode.next !== null) {
+      tmp = currNode.next;
+      currNode.next = tmp.next;
+      currNode = tmp;
+    }
+    return pCloneHead;
+  }
+
+  let result = Clone(a);
+
+  function linkCopy(header) {
+    const map = new Map();
+    var node = new RandomListNode(header.label);
+    let newPoint = node;
+    let orgPoint = header.next;
+    map.set(header, node);
+
+
+    while(orgPoint){
+      newPoint.next = new RandomListNode(orgPoint.label);
+      map.set(orgPoint, newPoint.next);
+      newPoint = newPoint.next;
+      orgPoint = orgPoint.next;
+    }
+
+
+    newPoint = node;
+    orgPoint = header;
+    while(orgPoint){
+      newPoint.random = map.get(orgPoint.random);
+      newPoint = newPoint.next;
+      orgPoint = orgPoint.next;
+    }
+    return node;
+  }
+
+  const newA = linkCopy(a);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+  function foo() {
+    throw new Error('Oops');
+  }
+
+  function bar() {
+    foo();
+  }
+
+  function baz() {
+    bar()
+  }
+  (function() {
+    baz();
+  })()
+
+</script>
+</body>
+</html>

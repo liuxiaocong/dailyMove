@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<button id="btn">
+  Do log
+</button>
+<script type="text/javascript">
+  function debouncing(fun, time) {
+    let timeObject = null;
+    return () => {
+      if (timeObject) {
+        clearTimeout(timeObject);
+      }
+      const _arg = [].slice.call(arguments, 2);
+      timeObject = setTimeout(() => {
+        fun.apply(this, _arg);
+      }, time);
+    };
+  }
+
+  document.getElementById('btn').onclick = debouncing((name) => {
+    console.log('click: ' + name);
+  }, 1000, 'jack');
+</script>
+</body>
+</html>

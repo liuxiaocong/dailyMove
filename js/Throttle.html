@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<button id="btn">
+  Do log
+</button>
+<script type="text/javascript">
+  function throttle(fun, time) {
+    let timeObject = null;
+    let lastCallTime = 0;
+    let lastExeTime = 0;
+    return () => {
+      let now = new Date();
+      let updateTimeout = 0;
+      if(timeObject){
+        clearTimeout(timeObject);
+      }
+      if(lastCallTime === 0){
+        updateTimeout = time;
+      }else {
+        updateTimeout = time - (now.getTime() - lastExeTime);
+      }
+      lastCallTime = now.getTime();
+      const _arg = [].slice.call(arguments, 2);
+      if(updateTimeout <= 0){
+        fun.apply(this, _arg);
+        lastExeTime = now.getTime();
+      }else {
+        console.log("setTimeout");
+        timeObject = setTimeout(() => {
+          fun.apply(this, _arg);
+          lastExeTime = (new Date()).getTime();
+        }, updateTimeout);
+      }
+    };
+  }
+
+  document.getElementById('btn').onclick = throttle((name) => {
+    console.log('click: ' + name);
+  }, 2000, 'jack');
+</script>
+</body>
+</html>

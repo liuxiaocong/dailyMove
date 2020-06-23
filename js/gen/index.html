@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+  function genRun(gen) {
+    const g = gen();
+
+    next();
+
+    function next(err, pre) {
+      let temp;
+      (err === null) && (temp = g.next(pre));
+      (err !== null) && (temp = g.throw(pre));
+
+      if(!temp.done) {
+        nextWithYieldType(temp.value, next);
+      }
+    }
+  }
+
+  function nextWithYieldType(value, next) {
+    if(isPromise(value)) {
+      value
+      .then(success => next(null, success))
+      .catch(error => next(error))
+    }
+  }
+
+  genRun(gen);
+</script>
+</body>
+</html>

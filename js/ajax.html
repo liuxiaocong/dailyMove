@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    //console.log(xhttp.readyState);
+    if (this.readyState == 4 && this.status == 200) {
+      console.log(this.responseText);
+    }
+  };
+  console.log(xhttp.readyState);
+  xhttp.open("GET", "ajax_info.txt", true);
+  console.log(xhttp.readyState);
+  xhttp.send();
+  console.log(xhttp.readyState);
+</script>
+</body>
+</html>

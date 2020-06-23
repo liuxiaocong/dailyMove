@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+  const user = {
+    name: 'Evan',
+  };
+  const userProxy = new Proxy(user, {
+    get(target, p, receiver) {
+      console.log('get');
+      console.log(target);
+      console.log(receiver);
+      return Reflect.get(target, p, receiver);
+    },
+    set(target, p, value, receiver) {
+      console.log('set');
+      Reflect.set(target, p, value, receiver);
+    },
+  });
+  userProxy.name = 'Evan2';
+  console.log(userProxy.name);
+  console.log(user.name);
+  user.name = 'Evan3';
+  console.log(userProxy.name);
+  console.log(user.name);
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+  function callerDemo() {
+    //console.log(callerDemo.caller)
+    if (callerDemo.caller) {
+      var a = callerDemo.caller.toString();
+      console.log(a);
+    } else {
+      console.log("this is a top function");
+    }
+  }
+  function handleCaller() {
+    callerDemo();
+  }
+  handleCaller();
+  callerDemo();
+  //function calleeDemo() {
+  //  console.log(arguments.callee);
+  //}
+  //calleeDemo();
+</script>
+</body>
+</html>
