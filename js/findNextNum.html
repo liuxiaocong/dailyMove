@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+  function findNextNum(n) {
+    const large = '5';
+    const small = '2';
+    const current = n + '';
+    if (current.indexOf(small) < 0) {
+      let ret = small;
+      for (let i = 0; i < current.length; i++) {
+        ret = ret + small;
+      }
+      return ret;
+    }
+    let ret = current.split('');
+    let changeIndex = -1;
+    for (let i = current.length - 1; i >= 0; i--) {
+      if(current[i] === small){
+        ret[i] = large;
+        changeIndex = i;
+        break;
+      }
+    }
+    console.log(ret);
+    console.log(changeIndex);
+    if(changeIndex !== 0 && changeIndex > 0){
+      for(let i = changeIndex + 1; i < ret.length; i++){
+        ret[i] = small;
+      }
+    }
+    return ret.join('');
+  }
+
+
+</script>
+</body>
+</html>

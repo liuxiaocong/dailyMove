@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+  function parent(name, sex) {
+    this.name = name;
+    this.sex = sex;
+  }
+  parent.prototype.sayName = function() {
+    console.log(this.name);
+  }
+  parent.prototype.tag = 'parent prototype';
+
+  function child(name, sex, age) {
+    this.age = age;
+    parent.call(this, name, sex );
+  }
+
+  var prototype = Object.create(parent.prototype); // 创建对象，创建父类原型的一个副本
+  prototype.constructor = child;                    // 增强对象，弥补因重写原型而失去的默认的constructor 属性
+  child.prototype = prototype;
+
+
+  const lili = new child('lili','girl',12);
+  lili.sayName()
+
+  const d = {
+    '__proto__':{
+      '__proto__':{
+        name: 'd',
+      }
+    }
+  }
+
+</script>
+</body>
+</html>
