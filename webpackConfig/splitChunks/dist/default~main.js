@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[0],{3:function(o,n,s){"use strict";s.r(n);var c=s(0),l=s.n(c);const w=l.a.join(["second","world"],"-");l.a.join(["hello","world"],"-");console.log(w),console.log({a:"1"})}}]);
+//# sourceMappingURL=default~main.js.map
