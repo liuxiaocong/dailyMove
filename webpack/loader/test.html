@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+  <script type="text/javascript">
+    const fetchDataA = () => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          //c = d + 1;
+          reject('fetch data is A')
+        }, 1000)
+      })
+    }
+
+    const fetchDataB = () => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve('fetch data is B')
+        }, 1000)
+      })
+    }
+
+    const fetchDataC = () => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve('fetch data is C')
+        }, 1000)
+      })
+    };
+
+    (async function() {
+      try {
+        console.log('fetch A');
+        const dataA = await fetchDataA()
+        console.log('dataA is ->', dataA)
+      } catch(err) {
+        console.log('err is ->', err)
+      }
+      //well break exe
+      //const dataA = await fetchDataA()
+      //console.log('dataA is ->', dataA)
+      try {
+        console.log('fetch B');
+        const dataB = await fetchDataB()
+        console.log('dataB is ->', dataB)
+      } catch(err) {
+        console.log('err is ->', err)
+      }
+
+      try {
+        console.log('fetch C');
+        const dataC = await fetchDataC()
+        console.log('dataC is ->', dataC)
+      } catch(err) {
+        console.log('err is ->', err)
+      }
+    })();
+
+    (async function() {
+      const d = await fetchDataA().then((res)=>{
+        return res + 'success';
+      },(err)=>{
+        return err + 'fail';
+      }).catch((err)=>{
+        return err + 'catch fail';
+      })
+      console.log(d);
+    })();
+
+
+  </script>
+</body>
+</html>

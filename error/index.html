@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<button id="btn">Click</button>
+<script type="text/javascript">
+
+  //document.getElementById('btn').onclick = ()=>{
+  //  console.log('btn')
+  //}
+  //console.log(a);
+  //function main() {
+  //  try {
+  //    setTimeout(() => {
+  //      throw new Error('async error')
+  //    }, 1000)
+  //  } catch(e) {
+  //    console.log(e, 'err')
+  //    console.log('continue...')
+  //  }
+  //}
+  //
+  //main();
+
+  const p3 = () =>  new Promise((reslove, reject) => {
+    setTimeout(() => {
+
+      reject('async error');
+    })
+  });
+
+  function main3() {
+    p3().catch(e => console.log(e));
+  }
+  main3();
+
+</script>
+</body>
+</html>

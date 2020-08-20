@@ -1,0 +1,1 @@
+npx babel index.js --watch --out-file index-compiled.js

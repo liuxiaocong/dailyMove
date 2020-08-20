@@ -11,7 +11,7 @@ const MemoMobile = React.memo(Mobile);
 
 function App() {
   const [inx, setInx] = useState(1);
-
+  const [str, setStr] = useState('<script type="text/javascript">alert(1)</script>');
   let Cop;
 
   if(document.body.clientWidth <= 600){
@@ -39,6 +39,7 @@ function App() {
       <Mobile />
       <MemoMobile />
       <Cop />
+      {str}
     </div>
   );
 }
